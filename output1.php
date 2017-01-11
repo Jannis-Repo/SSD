@@ -1,7 +1,7 @@
 
 <?php
-	/* Sona Gautam
-	* Output1 -Number of Incident */
+	/* Sona Gautam 
+	* Output1 -Number of Incidents */
 
 	//Need to include database connection 
 	require ('');
