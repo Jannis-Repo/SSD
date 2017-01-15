@@ -1,2 +1,2 @@
 # SSD
-@anashlt
+Shawty got potential, I could be her sponsor
