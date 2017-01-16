@@ -64,7 +64,7 @@ else if ($method == 'login')
         $row = mysqli_fetch_assoc($result);
 
         $_SESSION['loggedIn'] = true;
-        $_SESSION['EmployeeID'] = $row['EmployeeID'];
+        $_SESSION['employeeID'] = $row['EmployeeID'];
         $_SESSION['auth'] = $row['Level'];
 
         header('Location: http://www.stenden.protonbytez.com/');
@@ -82,7 +82,7 @@ else if ($method == 'login')
             $row = mysqli_fetch_assoc($result);
 
             $_SESSION['loggedIn'] = true;
-            $_SESSION['EmployeeID'] = $row['UserID'];
+            $_SESSION['employeeID'] = $row['UserID'];
             $_SESSION['auth'] = 0;
 
             mysqli_free_result($result);
