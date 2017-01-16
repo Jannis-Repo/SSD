@@ -53,36 +53,48 @@ if ($method == 'addEmployee') {
 else if ($method == 'login')
 {
     //Variables
-    $match = false;
     $email = stripslashes($_POST['email']);
     $password = hash('whirlpool', stripslashes($_POST['password']));
 
     $tableName = "`EMPLOYEE`, `AUTHORISATION`";
-    $sqlString = "SELECT `EMPLOYEE`.`EmployeeID`, `EMPLOYEE`.`EmployeeEmail`, `EMPLOYEE`.`EmployeePassword`, `AUTHORISATION`.`Level`
-                  FROM $tableName
-                  WHERE `EMPLOYEE`.`AuthorisationID`=`AUTHORISATION`.`AuthorisationID`";;
-
+    $sqlString = "SELECT * FROM $tableName WHERE `EMPLOYEE`.`EmployeeEmail` = '$email' AND `EMPLOYEE`.`EmployeePassword`= '$password'";
     $result = mysqli_query($DBConnection, $sqlString) OR DIE ('Error: ' . mysqli_errno($DBConnection) . mysqli_error($DBConnection));
 
-    while($row = mysqli_fetch_assoc($result))
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+
+        $_SESSION['loggedIn'] = true;
+        $_SESSION['EmployeeID'] = $row['EmployeeID'];
+        $_SESSION['auth'] = $row['Level'];
+
+        header('Location: http://www.stenden.protonbytez.com/');
+        exit;
+    }
+    else
     {
-        if ($row['EmployeeEmail'] == $email && $row['EmployeePassword'] == $password)
-        {
-            $match = true;
+        mysqli_free_result($result);
+
+        $tableName = "`USER`";
+        $sqlString = "SELECT * FROM $tableName WHERE `UserEmail` = '$email' AND `UserPassword`= '$password'";
+        $result = mysqli_query($DBConnection, $sqlString) OR DIE ('Error: ' . mysqli_errno($DBConnection) . mysqli_error($DBConnection));
+
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
 
             $_SESSION['loggedIn'] = true;
-            $_SESSION['employeeID'] = $row['EmployeeID'];
-            $_SESSION['auth'] = $row['Level'];
+            $_SESSION['EmployeeID'] = $row['UserID'];
+            $_SESSION['auth'] = 0;
+
+            mysqli_free_result($result);
 
             header('Location: http://www.stenden.protonbytez.com/');
             exit;
         }
-    }
-
-    if ($match == false)
-    {
-        echo '<p>E-Mail or Password wrong.</p>';
-        echo '<p>Please try again.</p>';
+        else
+        {
+            echo '<p>E-Mail or Password wrong.</p>';
+            echo '<p>Please try again.</p>';
+        }
     }
 }
 else
