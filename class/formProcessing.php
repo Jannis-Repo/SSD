@@ -78,8 +78,32 @@ else if ($method == 'login')
             echo '<p>Please try again.</p>';
         }
     }
-}
-else
-{
+} elseif($method == 'addUser') {
+    /*
+    * Name: Anass Houlout
+    * Desc: Add a new User
+    */
+
+    // Get the POST data
+    $name = stripslashes($_POST["name"]);
+    $surname = stripslashes($_POST["surname"]);
+    $email = stripslashes($_POST["email"]);
+    $password = hash('whirlpool', $_POST["password"]);
+
+    // Client ID
+    $clientId = $_POST["company"];
+
+    $role = stripslashes($_POST["role"]);
+    $phonenumber = stripslashes($_POST["phonenumber"]);
+
+    // execute sql query
+    $sql = mysqli_query($DBConnection, "INSERT INTO USER VALUES ('', '$clientId', '$name', '$surname', '$email', '$password', '$role', '$phonenumber')");
+    if($sql)
+    {
+        echo '<div class="alert alert-success"><strong>Success!</strong> User added successfully.</div>';
+    } else {
+        echo 'There was a system error. please contact the technical support';
+    }
+} else {
     echo '<p>A problem occured. Please try again.</p>';
 }
