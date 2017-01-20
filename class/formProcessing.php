@@ -5,10 +5,12 @@
  * Date: 1/13/2017
  * Time: 11:19 AM
  */
+
 session_start();
 include 'dbConnection.php';
 $method = $_POST['method'];
 if ($method == 'addEmployee') {
+  
     //Variables
     $firstName = stripslashes($_POST['firstName']);
     $lastName = stripslashes($_POST['lastName']);
@@ -16,17 +18,17 @@ if ($method == 'addEmployee') {
     $password = hash('whirlpool', stripslashes($_POST['password']));
     $authorisation = stripslashes($_POST['authorisation']);
     $pictureURL = 'employeePictures/' . $_FILES['pictureUpload']['name'];
+
     /**
      * Name:	    Jannis Luegering
      * Desc.:	    Insert data for the employee.
      **/
+  
     $tableName = "EMPLOYEE";
     $SQLstring = "INSERT INTO $tableName VALUES(NULL, '$authorisation', '" . utf8_encode($firstName) . "', '" . utf8_encode($lastName) . "', '$pictureURL', '$email', '$password')";
+
     $result = mysqli_query($DBConnection, $SQLstring);
-    echo '<pre>';
-    var_dump($result);
-    var_dump($SQLstring);
-    echo '</pre>';
+
     if ($result)
     {
         /**
@@ -46,6 +48,7 @@ else if ($method == 'login')
     //Variables
     $email = stripslashes($_POST['email']);
     $password = hash('whirlpool', stripslashes($_POST['password']));
+
     $tableName = "`EMPLOYEE`, `AUTHORISATION`";
     $sqlString = "SELECT * FROM $tableName WHERE `EMPLOYEE`.`EmployeeEmail` = '$email' AND `EMPLOYEE`.`EmployeePassword`= '$password'";
     $result = mysqli_query($DBConnection, $sqlString) OR DIE ('Error: ' . mysqli_errno($DBConnection) . mysqli_error($DBConnection));
@@ -54,6 +57,7 @@ else if ($method == 'login')
         $_SESSION['loggedIn'] = true;
         $_SESSION['employeeID'] = $row['EmployeeID'];
         $_SESSION['auth'] = $row['Level'];
+
         header('Location: http://www.stenden.protonbytez.com/');
         exit;
     }
@@ -69,6 +73,7 @@ else if ($method == 'login')
             $_SESSION['employeeID'] = $row['UserID'];
             $_SESSION['auth'] = 0;
             mysqli_free_result($result);
+          
             header('Location: http://www.stenden.protonbytez.com/');
             exit;
         }
