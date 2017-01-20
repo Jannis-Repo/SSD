@@ -109,6 +109,37 @@ else if ($method == 'login')
     } else {
         echo 'There was a system error. please contact the technical support';
     }
+} elseif($method == "addIncident") {
+    /*
+    * Name: Anass Houlout
+    * Desc: Add a new incident via the user interface
+    */
+
+    // Get the POST data
+    $userID = stripcslashes($_POST["userID"]);
+    $description = mysqli_real_escape_string($DBConnection, $_POST["description"]);
+    $type = stripslashes($_POST["type"]);
+    // Date 
+    $date = date('Y-m-d');
+    // Default priority value
+    $priority = 1;
+    // execute sql query - INCIDENT table
+    $sql = mysqli_query($DBConnection, "INSERT INTO INCIDENT VALUES ('', '$userID', '$type', '$date', NULL, '$description', '$priority')");
+    if($sql)
+    {
+        $incidentID = mysqli_insert_id($DBConnection);
+        $status = 1; // Default status (New = 1)
+        $status_date = date("Y-m-d H:i:s");
+        // execute sql query - INCIDENT_STATUS table
+        $sql2 = mysqli_query($DBConnection, "INSERT INTO INCIDENT_STATUS VALUES ('', '$incidentID', '', '$status', '', '$status_date')");
+        if($sql2)
+        {
+            $_SESSION['success'] = "Incident added successfully.";
+			header('Location: ' . $_SERVER['HTTP_REFERER']);
+        }
+    } else {
+        echo 'There was a system error. please contact the technical support';
+    } 
 } else {
     echo '<p>A problem occured. Please try again.</p>';
 }
