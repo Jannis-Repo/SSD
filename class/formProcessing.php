@@ -140,6 +140,47 @@ else if ($method == 'login')
     } else {
         echo 'There was a system error. please contact the technical support';
     } 
+} elseif($method == "editIncidentStatus") {
+	/*
+    * Name: Anass Houlout
+    * Desc: Editing incident status
+    */
+	
+	// Get the POST data
+    $incidentID = stripcslashes($_POST["incidentId"]);
+    $status = stripslashes($_POST["status"]);
+    $solution = stripslashes($_POST["solution"]);
+
+	// Employee ID
+	$employeeID = $_SESSION['employeeID'];
+	
+	// Status Date (DateTime Format)
+	$status_date = date("Y-m-d H:i:s");
+	
+	// execute sql query - INCIDENT_STATUS table
+    $sql = mysqli_query($DBConnection, "INSERT INTO INCIDENT_STATUS VALUES ('', '$incidentID', '$employeeID', '$status', '$solution', '$status_date')");
+
+	if($sql) 
+	{
+	    if ($status == 6)
+	    {
+            $sqlAddDateEnd = "UPDATE INCIDENT SET DateEnd = '$status_date' WHERE IncidentID = $incidentID";
+            $endSQL = mysqli_query($DBConnection, $sqlAddDateEnd);
+            if ($endSQL)
+            {
+                $_SESSION['success'] = "Incident updated successfully.";
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+                exit;
+            }
+        }
+
+
+		$_SESSION['success'] = "Incident updated successfully.";
+		header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+	} else {
+		echo 'There was a system error. please contact the technical support';
+	}
 } else {
     echo '<p>A problem occured. Please try again.</p>';
 }
