@@ -109,6 +109,26 @@ else if ($method == 'login')
     } else {
         echo 'There was a system error. please contact the technical support';
     }
+} elseif($method == 'addClient') {
+    /*
+    * Name: Anass Houlout
+    * Desc: Add a new client
+    */
+    // Get the POST data
+    $name = stripslashes($_POST["name"]);
+    $address = stripslashes($_POST["address"]);
+    $email = stripslashes($_POST["email"]);
+    $type = $_POST["type"]; // Client Type ID
+
+    // execute sql query
+    $sql = mysqli_query($DBConnection, "INSERT INTO CLIENT VALUES ('', '$name', '$address', '$email', '$type')");
+    if($sql)
+    {
+		$_SESSION['success'] = "Client added successfully.";
+		header('Location: ' . $_SERVER['HTTP_REFERER']);
+    } else {
+        echo 'There was a system error. please contact the technical support';
+    }
 } elseif($method == "addIncident") {
     /*
     * Name: Anass Houlout
