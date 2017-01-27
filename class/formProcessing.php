@@ -69,13 +69,28 @@ else if ($method == 'login')
         $result = mysqli_query($DBConnection, $sqlString) OR DIE ('Error: ' . mysqli_errno($DBConnection) . mysqli_error($DBConnection));
         if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
-            $_SESSION['loggedIn'] = true;
-            $_SESSION['employeeID'] = $row['UserID'];
-            $_SESSION['auth'] = 0;
-            mysqli_free_result($result);
-          
-            header('Location: http://www.stenden.protonbytez.com/');
-            exit;
+			/*
+			/* Anass Houlout
+			/* Description: Check License
+			*/
+			$cID = $row['ClientID'];
+			$licenseSql = mysqli_query($DBConnection, "SELECT * FROM LICENSE WHERE ClientID = '$cID'");
+			$licenseResult = mysqli_fetch_assoc($licenseSql);
+			$exp_date = strtotime(str_replace('-', '/', $licenseResult['ExpiryDate']));
+			if(time() > $exp_date)
+			{
+				$_SESSION["error"] = "Your license has expired, please notify your manager.";
+				header('Location: ' . $_SERVER['HTTP_REFERER']);
+			} else {
+				$_SESSION['loggedIn'] = true;
+				$_SESSION['employeeID'] = $row['UserID'];
+				$_SESSION['auth'] = 0;
+
+				mysqli_free_result($result);
+
+				header('Location: http://www.stenden.protonbytez.com/');
+				exit;
+			}
         }
         else
         {
