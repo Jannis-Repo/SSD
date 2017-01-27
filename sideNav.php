@@ -48,7 +48,7 @@ else
 				</div>
 				<!-- CLOSED NAV BAR LOGO ELEMENT -->
 				<div class="logo-element">
-					WS
+					<a href="profile.php">WS</a>
 				</div>
 			</li>
 
