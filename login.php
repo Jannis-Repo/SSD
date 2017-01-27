@@ -31,6 +31,13 @@ session_destroy();
 					Created to support White Stones subscribed Clients. We are here for you.
 				</p>
 				<p>Login in. To start working with our specialists.</p>
+				<?php
+						if($_SESSION['error'])
+						{
+							echo '<div class="alert alert-danger">'.$_SESSION['error'].'</div>';
+							$_SESSION['error'] = "";
+						}
+						?>
 				<form class="m-t" role="form" action="class/formProcessing.php" method="POST">
 					<input type="hidden" name="method" value="login">
 					<div class="form-group">
